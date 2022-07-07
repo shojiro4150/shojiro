@@ -680,7 +680,7 @@ void main_task(intptr_t unused) {
     === BEHAVIOR TREE DEFINITION ENDS HERE ===
 */
 
-    /* register cyclic handler to EV3RT */
+    /* register cyc handler to EV3RT */
     sta_cyc(CYC_UPD_TSK);
 
     /* indicate initialization completion by LED color */
