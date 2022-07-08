@@ -82,10 +82,10 @@ extern Plotter*     plotter;
 /* these parameters are intended to be given as a compiler directive,
    e.g., -D=SPEED_NORM=50, for fine tuning                                  */
 #ifndef SPEED_NORM
-#define SPEED_NORM              20  /* was 50 for 2020 program                 */
+#define SPEED_NORM              60  /* was 50 for 2020 program                 */
 #endif
 #ifndef SPEED_SLOW
-#define SPEED_SLOW              30
+#define SPEED_SLOW              25
 #endif
 #ifndef P_CONST
 #define P_CONST                 0.75D

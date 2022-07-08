@@ -678,15 +678,93 @@ void main_task(intptr_t unused) {
         .end()
         .build();
 
-        tr_slalom = (BrainTree::BehaviorTree*) BrainTree::Builder()
+    tr_slalom = (BrainTree::BehaviorTree*) BrainTree::Builder()
+        .composite<BrainTree::ParallelSequence>(1,2)
+            .leaf<IsBackOn>()
+            .composite<BrainTree::MemSequence>()
+                .composite<BrainTree::ParallelSequence>(1,2)
+                        .leaf<IsColorDetected>(CL_BLUE)
+                        .leaf<TraceLine>(SPEED_NORM, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)
+                .end()
+                .composite<BrainTree::ParallelSequence>(1,2)
+                    .leaf<IsTimeEarned>(1200000)
+                    .leaf<TraceLine>(SPEED_NORM, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)
+                .end()
+                .composite<BrainTree::ParallelSequence>(1,2)
+                    .leaf<IsTimeEarned>(2600000)
+                    .leaf<TraceLine>(SPEED_SLOW, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)
+                .end()
+                .composite<BrainTree::ParallelSequence>(1,2)
+                    .leaf<IsTimeEarned>(2400000)
+                    .leaf<RunAsInstructed>(10, 15, 0.0)
+                .end()
+                .composite<BrainTree::ParallelSequence>(1,2)
+                    .leaf<IsTimeEarned>(2500000)
+                    .leaf<RunAsInstructed>(25, 10, 0.0)
+                .end()
+                .composite<BrainTree::ParallelSequence>(1,2)
+                    .leaf<IsTimeEarned>(3000000)
+                    .leaf<RunAsInstructed>(10, 25, 0.0)
+                .end()
+                .composite<BrainTree::ParallelSequence>(1,2)
+                    .leaf<IsTimeEarned>(3000000)
+                    .leaf<RunAsInstructed>(30, 15, 0.0)
+                .end()
+                .composite<BrainTree::ParallelSequence>(1,2)
+                    .leaf<RunAsInstructed>(0, 0, 0.0)
+                .end()
+            .end()
+        .end()
+        .build();
+
+/*
+    tr_slalom = (BrainTree::BehaviorTree*) BrainTree::Builder()
+        .composite<BrainTree::MemSequence>()
+            .composite<BrainTree::ParallelSequence>(1,2)
+                .leaf<IsDistanceEarned>(170) // 170
+                .leaf<TraceLine>(SPEED_NORM, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)
+            .end()
+            .composite<BrainTree::ParallelSequence>(1,2)
+                .leaf<IsTargetAngleEarned>(-10,Less)
+                .leaf<RunAsInstructed>(23,23, 0.0)
+                .leaf<ShiftArmPosition>(80)                
+            .end()
+            .composite<BrainTree::ParallelSequence>(1,2)
+                .leaf<IsTargetAngleEarned>(0,More)
+                .leaf<RunAsInstructed>(23,23, 0.0)
+                .leaf<ShiftArmPosition>(80)                
+            .end()
+
+            .composite<BrainTree::ParallelSequence>(1,2)
+                .leaf<IsTimeEarned>(65)
+                .leaf<ShiftArmPosition>(-100)
+                .leaf<RunAsInstructed>(0, 0, 0.0)
+            .end()
+
+            .composite<BrainTree::ParallelSequence>(1,2)
+                .leaf<IsArmRepositioned>()
+                .leaf<ShiftArmPosition>(10)
+            .end()
+            .composite<BrainTree::ParallelSequence>(1,2)
+                .leaf<IsTimeEarned>(20)
+                .leaf<ShiftArmPosition>(0)
+            .end()
+        .end()
+        .build();
+
+    tr_slalom = (BrainTree::BehaviorTree*) BrainTree::Builder()
         .composite<BrainTree::MemSequence>()
             .leaf<ClimbBoard>(_COURSE, 0)
+
             .composite<BrainTree::ParallelSequence>(1,2)
-                .leaf<IsDistanceEarned>(1200)
+                .leaf<IsDistanceEarned>(2)
                 .leaf<TraceLine>(SPEED_SLOW, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)
             .end()
         .end()
         .build();
+
+
+*/
 
     tr_block = (BrainTree::BehaviorTree*) BrainTree::Builder()
         .composite<BrainTree::ParallelSequence>(1,2)
@@ -736,8 +814,8 @@ void main_task(intptr_t unused) {
     stp_cyc(CYC_UPD_TSK);
     /* destroy behavior tree */
     delete tr_block;
-    delete tr_run;
     delete tr_slalom;
+    delete tr_run;
     delete tr_calibration;
     /* destroy EV3 objects */
     delete lpf_b;
@@ -783,9 +861,14 @@ void update_task(intptr_t unused) {
             case BrainTree::Node::Status::Success:
                 switch (JUMP) { /* JUMP = 1... is for testing only */
                     case 1:
+                        state = ST_SLALOM;
+                        _log("State changed: ST_CALIBRATION to ST_BLOCK");
+                        break;
+                    case 2:
                         state = ST_BLOCK;
                         _log("State changed: ST_CALIBRATION to ST_BLOCK");
                         break;
+                
                     default:
                         state = ST_RUN;
                         _log("State changed: ST_CALIBRATION to ST_RUN");
