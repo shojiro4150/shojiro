@@ -808,7 +808,7 @@ void update_task(intptr_t unused) {
             status = tr_run->update();
             switch (status) {
             case BrainTree::Node::Status::Success:
-                state = ST_BLOCK;
+                state = ST_SLALOM;
                 _log("State changed: ST_RUN to ST_SLALOM");
                 break;
             case BrainTree::Node::Status::Failure:
