@@ -56,8 +56,8 @@ static void motor_drive_control(int16_t steering_amount)
     /*    left_motor_power  = (int)(BASE_SPEED + (steering_amount * LEFT_EDGE));
         right_motor_power = (int)(BASE_SPEED - (steering_amount * LEFT_EDGE));
     */
-    left_motor_power = (int)(100);
-    right_motor_power = (int)(100);
+    left_motor_power = (int)(-60);
+    right_motor_power = (int)(-60);
 
     /* 左右モータ駆動パワーの設定 */
     ev3_motor_set_power(left_motor, left_motor_power);
