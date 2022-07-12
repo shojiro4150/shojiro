@@ -662,6 +662,7 @@ void main_task(intptr_t unused) {
             .leaf<IsBackOn>()
             .composite<BrainTree::MemSequence>()
                 .composite<BrainTree::ParallelSequence>(1,2)
+                        .leaf<IsDistanceEarned>(100)
                         .leaf<IsColorDetected>(CL_BLUE)
                         .leaf<TraceLine>(SPEED_NORM, GS_TARGET, P_CONST, I_CONST, D_CONST, 0.0, TS_NORMAL)
                 .end()
