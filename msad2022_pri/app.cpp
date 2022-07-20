@@ -688,7 +688,7 @@ void main_task(intptr_t unused) {
                     .leaf<RunAsInstructed>(0, 0, 0.0)
                 .end()
                 .composite<BrainTree::ParallelSequence>(1,2)
-                    .leaf<IsDistanceEarned>(130)
+                    .leaf<IsDistanceEarned>(120)
                     .leaf<RunAsInstructed>(15, 35, 0.0)
                 .end()
                 .composite<BrainTree::ParallelSequence>(1,2)
